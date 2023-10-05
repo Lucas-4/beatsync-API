@@ -110,4 +110,11 @@ module.exports = class User {
       [follower_id, following_id]
     );
   }
+
+  static async unfollow(follower_id, following_id) {
+    await db.execute(
+      "DELETE FROM user_follows WHERE follower_id = ? AND following_id = ?",
+      [follower_id, following_id]
+    );
+  }
 };

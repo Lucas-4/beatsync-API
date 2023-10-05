@@ -326,6 +326,18 @@ router.post("/users/me/following", auth(), async (req, res) => {
   }
 });
 
+router.delete("/users/me/following", auth(), async (req, res) => {
+  try {
+    console.log(req.user);
+    console.log(req.body.following_id);
+    await User.unfollow(req.user, req.body.following_id);
+    res.status(201).send({ message: "success" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: "internal server error" });
+  }
+});
+
 router.post("/users/logout", (req, res) => {
   res.clearCookie("access_token", {
     sameSite: "none",
