@@ -40,7 +40,6 @@ const stateKey = "spotify_auth_state";
 const router = express.Router();
 
 router.get("/users/spotify_authorize", function (req, res) {
-  console.log(req.headers.origin);
   const state = generateRandomString(16);
   res.cookie(stateKey, state, { secure: true, sameSite: "none" });
   redirect_uri = req.headers.origin + "/get_token";
@@ -162,7 +161,6 @@ const fileStorage = multer.diskStorage({
 });
 
 const upload = multer({ storage: fileStorage });
-//create user route
 
 async function validateUser(user, validateUsername = true) {
   let isUsernameAvailable;
@@ -223,9 +221,6 @@ router.post(
   upload.single("upload"),
   async (req, res) => {
     try {
-      console.log("req body");
-      console.log(req.body);
-      console.log(req.body.username);
       req.body.image_path =
         req.file !== undefined
           ? req.file.filename
@@ -238,7 +233,6 @@ router.post(
         bio: req.body.bio,
         image_path: req.body.image_path,
       });
-      console.log(user);
       await validateUser(user);
       await user.save();
       res.status(200).send({ message: "User created" });
@@ -264,11 +258,8 @@ router.post(
 router.put("/users", auth(), upload.single("upload"), async (req, res) => {
   try {
     req.body.image_path = req.file !== undefined ? req.file.filename : "";
-    console.log(req.body);
     const user = new User();
-
     await getUserId(req);
-
     user.create({
       user_id: req.user,
       display_name: req.body.display_name,
@@ -277,7 +268,6 @@ router.put("/users", auth(), upload.single("upload"), async (req, res) => {
     });
     await validateUser(user, false);
     await user.update(!(req.file === undefined));
-
     res.status(201).send({ message: "success" });
   } catch (error) {
     console.log(error);
@@ -292,8 +282,6 @@ router.get("/users/:username/posts", auth(), async (req, res) => {
   try {
     const { user_id } = await User.getUserId(req.params.username);
     const posts = await Post.getUserPosts(req.user, user_id);
-    console.log(posts);
-
     res.status(200).send({ posts: posts });
   } catch (error) {
     console.log(error);
@@ -305,8 +293,6 @@ router.get("/users/:username/liked_posts", auth(), async (req, res) => {
   try {
     const { user_id } = await User.getUserId(req.params.username);
     const posts = await Post.getLikedPosts(user_id);
-    console.log(posts);
-
     res.status(200).send({ posts: posts });
   } catch (error) {
     console.log(error);
@@ -328,7 +314,6 @@ router.get("/users/:username", auth(), async (req, res) => {
   try {
     const user = await User.getByUsername(req.params.username);
     user.is_my_profile = req.user === user.user_id;
-    console.log(user);
     res.status(200).send({ user: user });
   } catch (error) {
     console.log(error);
@@ -341,7 +326,6 @@ router.post("/users/me/following", auth(), async (req, res) => {
     console.log(req.user);
     console.log(req.body.following_id);
     await User.follow(req.user, req.body.following_id);
-
     res.status(201).send({ message: "success" });
   } catch (error) {
     console.log(error);
