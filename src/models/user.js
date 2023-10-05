@@ -61,7 +61,7 @@ module.exports = class User {
     return rows[0] === undefined;
   }
 
-  static async getByUsername(username) {
+  static async getByUsername(requesting_user_id, username) {
     const [rows, fields] = await db.execute(
       `SELECT 
       user_id,
@@ -78,7 +78,7 @@ module.exports = class User {
       FROM
           user_follows
       WHERE
-          follower_id = 'eyza1i5v6nor9qa5wqk5c40yf'
+          follower_id = ?
               AND following_id = (SELECT 
                   user_id
               FROM
@@ -87,7 +87,7 @@ module.exports = class User {
                   username = ?)) b ON user_id = b.following_id
   WHERE
       username = ?`,
-      [username, username]
+      [requesting_user_id, username, username]
     );
     return rows[0];
   }

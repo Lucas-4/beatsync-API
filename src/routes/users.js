@@ -303,8 +303,10 @@ router.get("/users/me", auth(), async (req, res) => {
 
 router.get("/users/:username", auth(), async (req, res) => {
   try {
-    const user = await User.getByUsername(req.params.username);
+    const user = await User.getByUsername(req.user, req.params.username);
+    console.log(req.user);
     user.is_my_profile = req.user === user.user_id;
+    console.log(user);
     res.status(200).send({ user: user });
   } catch (error) {
     console.log(error);
