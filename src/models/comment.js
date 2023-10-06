@@ -31,7 +31,7 @@ module.exports = class Comment {
       IFNULL(likes.likes_num, 0) likes_num,
       IF(ISNULL(user_likes.comment_id), 0, 1) is_liked
   FROM
-      music_app.comment
+      comment
           INNER JOIN
       user ON comment.user_id = user.user_id
           LEFT JOIN
@@ -40,13 +40,13 @@ module.exports = class Comment {
       (SELECT 
           comment_id, COUNT(comment_id) likes_num
       FROM
-          music_app.comment_likes
+          comment_likes
       GROUP BY comment_id) likes ON comment.comment_id = likes.comment_id
                 LEFT JOIN
         (SELECT 
             *
         FROM
-            music_app.comment_likes
+            comment_likes
         WHERE
             user_id = ?) user_likes ON comment.comment_id = user_likes.comment_id
   WHERE

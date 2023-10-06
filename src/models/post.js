@@ -56,14 +56,14 @@ module.exports = class Post {
           TRUE) is_liked,
       IFNULL(comment.comments_num, 0) comments_num
   FROM
-      music_app.post
+      post
           INNER JOIN
       user ON user.user_id = post.user_id
           LEFT JOIN
       (SELECT 
           post_id, COUNT(post_id) likes_num
       FROM
-          music_app.post_likes
+          post_likes
       GROUP BY post_id) likes ON post.post_id = likes.post_id
           LEFT JOIN
       (SELECT 
@@ -76,7 +76,7 @@ module.exports = class Post {
       (SELECT 
           post_id, COUNT(post_id) comments_num
       FROM
-          music_app.comment
+          comment
       GROUP BY post_id) comment ON post.post_id = comment.post_id
   WHERE
       post.post_id = ?`,
@@ -105,14 +105,14 @@ module.exports = class Post {
           TRUE) is_liked,
     IFNULL(comment.comments_num, 0) comments_num
   FROM
-      music_app.post
+      post
           INNER JOIN
       user ON user.user_id = post.user_id
           LEFT JOIN
       (SELECT 
           post_id, COUNT(post_id) likes_num
       FROM
-          music_app.post_likes
+          post_likes
       GROUP BY post_id) likes ON post.post_id = likes.post_id
           LEFT JOIN
       (SELECT 
@@ -125,7 +125,7 @@ module.exports = class Post {
       (SELECT 
           post_id, COUNT(post_id) comments_num
       FROM
-          music_app.comment
+          comment
       GROUP BY post_id) comment ON post.post_id = comment.post_id ORDER BY post.create_date DESC`,
       [user_id]
     );
@@ -152,14 +152,14 @@ module.exports = class Post {
           TRUE) is_liked,
           IFNULL(comment.comments_num, 0) comments_num
   FROM
-      music_app.post
+      post
           INNER JOIN
       user ON user.user_id = post.user_id
           LEFT JOIN
       (SELECT 
           post_id, COUNT(post_id) likes_num
       FROM
-          music_app.post_likes
+          post_likes
       GROUP BY post_id) likes ON post.post_id = likes.post_id
           LEFT JOIN
       (SELECT 
@@ -172,7 +172,7 @@ module.exports = class Post {
       (SELECT 
           post_id, COUNT(post_id) comments_num
       FROM
-          music_app.comment
+          comment
       GROUP BY post_id) comment ON post.post_id = comment.post_id WHERE post.user_id = ?`,
       [loggedIn_user_id, target_user_id]
     );
@@ -206,7 +206,7 @@ FROM
     (SELECT 
         post_id, COUNT(post_id) likes_num
     FROM
-        music_app.post_likes
+        post_likes
     GROUP BY post_id) likes ON post_likes.post_id = likes.post_id
         LEFT JOIN
     (SELECT 
@@ -237,7 +237,7 @@ WHERE
       ifnull(likes.likes_num, 0) likes_num,
       IF(ISNULL(user_likes.comment_id), 0, 1) is_liked
   FROM
-      music_app.comment
+      comment
           INNER JOIN
       user ON comment.user_id = user.user_id
           LEFT JOIN
@@ -246,13 +246,13 @@ WHERE
       (SELECT 
           comment_id, COUNT(comment_id) likes_num
       FROM
-          music_app.comment_likes
+          comment_likes
       GROUP BY comment_id) likes ON comment.comment_id = likes.comment_id
           LEFT JOIN
       (SELECT 
           *
       FROM
-          music_app.comment_likes
+          comment_likes
       WHERE
           user_id = ?) user_likes ON comment.comment_id = user_likes.comment_id
   WHERE
