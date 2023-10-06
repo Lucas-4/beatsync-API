@@ -13,7 +13,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "http://192.168.1.10:3000, https://beatsync-2a722ccb6f0f.herokuapp.com",
+      "http://192.168.1.10:3000",
+      "https://beatsync-2a722ccb6f0f.herokuapp.com",
     ],
     credentials: true,
   })
