@@ -11,7 +11,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://192.168.1.10:3000"],
+    origin: [
+      "http://localhost:3000",
+      "http://192.168.1.10:3000, https://beatsync-2a722ccb6f0f.herokuapp.com",
+    ],
     credentials: true,
   })
 );
