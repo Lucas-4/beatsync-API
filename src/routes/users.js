@@ -332,7 +332,10 @@ router.post("/users/logout", (req, res) => {
 
 router.delete("/users/me", auth(), async (req, res) => {
     try {
-        await fs.unlink("profile_images/" + (await User.getImage(req.user)));
+        const userImage = await User.getImage(req.user);
+        if (userImage !== "default-profile-image.jpg") {
+            await fs.unlink("profile_images/" + userImage);
+        }
         await User.delete(req.user);
         res.status(201).send({ message: "User Deleted" });
     } catch (error) {
