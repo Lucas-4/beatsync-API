@@ -155,9 +155,10 @@ router.delete("/posts/:id", auth(), async (req, res) => {
             error.message = "User doesn't own this post";
             throw error;
         }
-        await fs.unlink(
-            "post_images/" + (await Post.getPostImage(req.params.id))
-        );
+        if (post.post_image_path !== null) {
+            await fs.unlink("post_images/" + post.post_image_path);
+        }
+
         await Post.delete(req.params.id, req.user);
         res.status(200).send({ message: "success" });
     } catch (error) {
