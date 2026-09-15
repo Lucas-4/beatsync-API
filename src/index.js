@@ -29,16 +29,6 @@ app.get("/test", (req, res) => {
     res.send("test succesfull");
 });
 
-if (process.env.NODE_ENV === "development") {
-    const server = https.createServer(
-        {
-            key: fs.readFileSync(path.join(__dirname, "key.pem")),
-            cert: fs.readFileSync(path.join(__dirname, "cert.pem")),
-            passphrase: process.env.PASSPHRASE,
-        },
-        app
-    );
-    server.listen(80);
-} else {
-    app.listen(process.env.PORT || 80);
-}
+app.listen(process.env.PORT, ()=>{
+    console.log("Listening on port: ",process.env.PORT)
+});
